@@ -186,6 +186,7 @@ A man with prior OAGB bariatric surgery (2017) developed fatigue, low libido and
 - CBC: **Hb 12.1 L** (recovering), Hct 36.9 L, RBC 4.24, MCV 84.4, RDW-CV 16.3 H, WBC 5.32, **lymphocytes 48% H**, Plt 280, ESR 05.
 - Calcium 9.0; total protein 7.6; albumin 3.7; bilirubin 0.40; AST 19; ALT 35; ALP 109; **creatinine 1.06, eGFR 82**.
 - Phosphate is named in the file title, but no phosphate result appears in the report.
+- **Folate 13.3 ng/mL** (ref 4.6–34.8) and **vitamin B12 690.39 pg/mL** (ref 192–827): both normal, so the anaemia is not due to folate or B12 deficiency. Folate was measured while on folic acid 5 mg BD. Sample taken 13 Oct 2026, reported 17 Oct 2026; referred by Dr. Surajit Roy Chowdhury (Psychiatry). [Folate and Vitamin B12 13 October 2026.pdf]
 
 ---
 
@@ -241,6 +242,12 @@ A man with prior OAGB bariatric surgery (2017) developed fatigue, low libido and
 | 02 Nov 2025 | — | 16.93 | **Prolactin 2.19 L** |
 | 16 Mar 2026 | 5.51 | 12.22 | |
 
+### Vitamins
+| Date | Vitamin B12 (pg/mL) | Folate (ng/mL) | Vitamin D 25-OH (ng/mL) |
+|---|---|---|---|
+| 08–13 Feb 2025 | 527 | — | **18.1 (insufficient)** |
+| 13 Oct 2026 | 690.39 | 13.3 | — |
+
 ### Inflammation / infection serology
 | Date | CRP (mg/L) | Typhoid ICT IgG/IgM | Other |
 |---|---|---|---|
@@ -261,7 +268,7 @@ A man with prior OAGB bariatric surgery (2017) developed fatigue, low libido and
 
 ## Active problem list (as of 13 Oct 2026)
 1. **Chronic marginal (anastomotic) ulcer after OAGB, with an upper-GI bleed (melaena) in Sep 2026.** H. pylori positive in Jun and Sep 2026; eradication course started 10 Sep 2026. No eradication test result is on file yet.
-2. **Recurrent iron-deficiency anaemia**: Hb 12.1 (recovering), ferritin 11.2 on 29 Sep 2026. Malabsorption after bypass plus GI blood loss is the likely mechanism.
+2. **Recurrent iron-deficiency anaemia**: Hb 12.1 (recovering), ferritin 11.2 on 29 Sep 2026. Malabsorption after bypass plus GI blood loss is the likely mechanism. Folate (13.3) and B12 (690) were normal on 13 Oct 2026.
 3. **Bile reflux disease; hiatus hernia (Hill grade IV).**
 4. **Presyncope with fall and occipital head trauma (Sep 2026).** MRI: mild atrophy and grade-I small-vessel change. EEG, echo and carotids normal. Likely related to anaemia, volume loss and low BP (100/70).
 5. **Cholelithiasis** (asymptomatic on report) and **grade-I fatty liver** (Jun 2026).
