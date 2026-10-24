@@ -1,0 +1,885 @@
+<title>Mohsin Chowdhury Health Record</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,500;7..72,650&family=Public+Sans:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: clinical chart — slim sticky section rail on wide screens, single reading column, tables in scroll wells */
+:root{
+  --bg:#f6f8f8; --surface:#ffffff; --fg:#17242a; --muted:#56676e; --line:#d5dfe1;
+  --accent:#0f6e74; --accent-soft:#e2f0f0; --flag:#a3361f; --flag-soft:#fbeae5; --hl:#fff1b8; --hl-edge:#c99a06;
+  --f-display:"Literata",Georgia,"Times New Roman",serif;
+  --f-body:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-data:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0f171a; --surface:#152126; --fg:#e3ecee; --muted:#93a6ac; --line:#2a3b41;
+  --accent:#5cc3c4; --accent-soft:#17343a; --flag:#f08a6e; --flag-soft:#3a201a; --hl:#4a3d0e; --hl-edge:#e0b93a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f171a; --surface:#152126; --fg:#e3ecee; --muted:#93a6ac; --line:#2a3b41;
+  --accent:#5cc3c4; --accent-soft:#17343a; --flag:#f08a6e; --flag-soft:#3a201a; --hl:#4a3d0e; --hl-edge:#e0b93a; color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font:15px/1.6 var(--f-body);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:200px minmax(0,1fr);gap:40px;padding-block:32px 64px}
+@media (max-width:860px){.wrap{grid-template-columns:minmax(0,1fr);gap:16px}nav.rail{position:static!important}}
+header.top{grid-column:1/-1;display:grid;gap:14px;border-bottom:1px solid var(--line);padding-block:0 22px}
+.eyebrow{font:600 11px/1 var(--f-data);letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+h1{font:650 clamp(26px,4vw,38px)/1.15 var(--f-display);margin:0;text-wrap:balance}
+.meta{color:var(--muted);font-size:13.5px;margin:0}
+.vitals{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:6px}
+.vital{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:10px 12px;display:grid;gap:2px}
+.vital b{font:600 20px/1.2 var(--f-data);font-variant-numeric:tabular-nums}
+.vital span{font-size:12px;color:var(--muted)}
+.vital.low{border-color:var(--flag);background:var(--flag-soft)} .vital.low b{color:var(--flag)}
+nav.rail{position:sticky;top:calc(env(safe-area-inset-top,0px) + 20px);align-self:start;display:grid;gap:2px;font-size:13px}
+nav.rail a{color:var(--muted);text-decoration:none;padding:5px 10px;border-left:2px solid var(--line)}
+nav.rail a:hover,nav.rail a:focus-visible{color:var(--accent);border-left-color:var(--accent);outline:none}
+main{min-width:0;max-width:780px}
+main h2{font:650 23px/1.25 var(--f-display);margin:44px 0 12px;padding-top:6px;text-wrap:balance;scroll-margin-top:16px}
+main h2:first-child{margin-top:4px}
+main h3{font:600 15.5px/1.35 var(--f-body);margin:30px 0 8px;padding-left:12px;border-left:3px solid var(--accent);text-wrap:balance}
+main p,main li{max-width:68ch}
+main ul,main ol{padding-left:20px;display:grid;gap:4px}
+strong{font-weight:700}
+hr{border:0;border-top:1px solid var(--line);margin:36px 0}
+code{font:13px var(--f-data);background:var(--accent-soft);padding:1px 4px;border-radius:3px}
+.tw{overflow-x:auto;margin:10px 0 16px;border:1px solid var(--line);border-radius:6px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:13.5px;font-variant-numeric:tabular-nums}
+th,td{padding:7px 11px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+tr:last-child td{border-bottom:0}
+th{font:600 11px/1.3 var(--f-data);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--accent-soft)}
+td:first-child{white-space:nowrap}
+.new{background:var(--hl);color:inherit;border-radius:3px;padding:0 2px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+div.new,li.new{display:block;padding:8px 12px;border-left:3px solid var(--hl-edge);border-radius:4px}
+li.new{margin-left:-12px}
+tr.new td{background:var(--hl)!important}
+.legend{grid-column:1/-1;display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:13px;background:var(--surface);border:1px dashed var(--hl-edge);border-radius:6px;padding:8px 12px}
+.legend .sw{display:inline-block;width:28px;height:14px;background:var(--hl);border-left:3px solid var(--hl-edge);border-radius:2px}
+.note{font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:14px;margin-top:40px}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+</style>
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">Medical record summary · 2017 – Oct 2026</div>
+  <h1>M. Mohsin Chowdhury</h1>
+  <p class="meta">Male · born 11 Jul 1967 · Apollo Imperial MRN IHL1037895 · updated <mark class="new">24 Oct 2026</mark> from <mark class="new">87</mark> reports (labs, imaging, endoscopy, discharge summaries)</p>
+  <div class="vitals" aria-label="Latest values">
+    <div class="vital low"><span>Haemoglobin · 13 Oct 2026</span><b>12.1 g/dL</b><span>ref 13–17 · recovering from 8.2</span></div>
+    <div class="vital low"><span>Ferritin · 29 Sep 2026</span><b>11.2 ng/mL</b><span>ref 25–350 · iron deficient</span></div>
+    <div class="vital"><span>LDL · 16 Mar 2026</span><b>78 mg/dL</b><span>from 189 on inclisiran</span></div>
+    <div class="vital"><span>eGFR · 13 Oct 2026</span><b>82</b><span>creatinine 1.06 mg/dL</span></div>
+  </div>
+</header>
+<div class="legend"><span class="sw" aria-hidden="true"></span><span><strong>Highlighted = changed since the 20 Oct 2026 version.</strong> Sources: three prescriptions (8 Sep 2025, 6 Jun 2026, 10 Sep 2026) and your corrected note “My latest Info” (24 Oct 2026). Please recheck these parts.</span></div>
+<nav class="rail" aria-label="Sections">
+  <a href="#patient-profile">Patient profile</a>
+  <a href="#one-paragraph-synopsis">Synopsis</a>
+  <a href="#chronological-timeline">Timeline</a>
+  <a href="#trend-tables">Trend tables</a>
+  <a href="#active-problem-list-as-of-13-oct-2026">Problem list</a>
+  <a href="#gaps--data-quality-notes-for-the-reader">Gaps &amp; notes</a>
+</nav>
+<main>
+<h2 id="patient-profile">Patient profile</h2>
+<div class="tw"><table>
+<thead>
+<tr class="header">
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Name</td>
+<td>M. Mohsin Chowdhury</td>
+</tr>
+<tr class="even">
+<td>Sex / DOB</td>
+<td>Male / 11 Jul 1967 (age 59 as of Oct 2026)</td>
+</tr>
+<tr class="odd">
+<td>Hospital IDs</td>
+<td>Apollo Imperial Hospital (IHL), Chattogram: MRN IHL1037895 · Apollo Bangalore UHID AHB.0000752138 · Popular Diagnostic UHID 150361302 / 151042787</td>
+</tr>
+<tr class="even">
+<td>Anthropometry</td>
+<td>Weight 80.6 kg, height 167 cm, BMI 28.9 (12 Feb 2025)<mark class="new"> · 79.6 kg, height 164 cm (8 Sep 2025) · <strong>70 kg (6 Jun 2026)</strong> · lowest 69 kg on tirzepatide · <strong>72 kg now (24 Oct 2026, self-reported)</strong></mark></td>
+</tr>
+<tr class="odd">
+<td>Main labs used</td>
+<td>Labaid Specialized Hospital Chattogram, Apollo Imperial Hospital (IHL) Chattogram, Popular Diagnostic Centre Chattogram</td>
+</tr>
+<tr class="even">
+<td>Main physicians</td>
+<td>Dr. Mohammad Mustafizur Rahman (Internal Medicine, IHL); Dr. A.T.M. Mohiuddin Chowdhury (Gastroenterology, IHL); Dr. Mohammad Majibul Haque (Internal Medicine, IHL, Sep 2026 admission)<mark class="new">; Dr. Mostafa Noor Mohsin (Gastroenterology, Parkview Hospital, second opinion 10 Sep 2026)</mark></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="long-standing-conditions-background">Long-standing conditions (background)</h3>
+<ul>
+<li><strong>Idiopathic hypersomnia</strong> since 1989; <strong>parasomnia</strong> since Jun–Jul 2024. Treated with modafinil/armodafinil + methylphenidate (Ritalin/Retanil).</li>
+<li><strong>Morbid obesity → laparoscopic mini gastric bypass / one-anastomosis gastric bypass (OAGB/MGB)</strong>, 4 Jul 2017 (Apollo Bangalore). Gastrojejunal anastomosis, 155 cm limb. (In 2026 endoscopy notes this is called "partial gastrectomy / post-gastrojejunostomy" anatomy.)</li>
+<li><strong>Hypertension</strong>: listed in 2017; IHL notes say since 2022. Nebivolol 5 mg; later telmisartan / amlodipine.<mark class="new"> On amlodipine 10 mg at night by Jun 2026.</mark></li>
+<li><strong>Dyslipidaemia</strong>: statin intolerant, also did not tolerate ciprofibrate. Started inclisiran (Leqvio) in Mar 2025.<mark class="new"> Bempedoic acid 180 mg daily (Winolip) added by Sep 2025.</mark></li>
+<li><strong>Restless legs syndrome</strong>: pramipexole (Parixol) 0.088 mg at night.</li>
+<li>Idiopathic muscle cramps: pregabalin 165 mg BD, stopped Sep 2024. Mirtazapine also stopped.</li>
+<li>Other regular meds (Feb 2025): escitalopram 10 mg OM, midazolam 7.5 mg at night (sleep), vitamin B12.</li>
+<li>Non-smoker. Not diabetic.</li>
+</ul>
+<hr />
+<h2 id="one-paragraph-synopsis">One-paragraph synopsis</h2>
+<p>A man with prior OAGB bariatric surgery (2017) developed fatigue, low libido and a "feverish" feeling in late 2024. In Feb 2025 he was found to have <strong>severe iron-deficiency anaemia</strong> (Hb ~10, MCV 67, ferritin 4.55), vitamin D insufficiency, high LDL (189), and serology positive for <strong>enteric (typhoid) and rickettsial fever</strong>. He was admitted on 14–15 Feb 2025 and treated with ceftriaxone, doxycycline and then levofloxacin. That course was followed by <strong>antibiotic-associated (pseudomembranous) colitis</strong>, treated with vancomycin. Endoscopy on 4 Mar 2025 showed <strong>erosions at the gastro-enterostomy stoma</strong>. Colonoscopy on 20 Mar 2025 found a 15 mm splenic-flexure lesion/polyp, removed by hot biopsy; histology showed <strong>non-specific chronic inflammation, no malignancy</strong>. Stool H. pylori antigen and occult blood were negative at that time. <strong>IV iron (ferric carboxymaltose/Maltofer)</strong> fully corrected the anaemia (Hb 13.8–15.1, ferritin 107–239) from Apr 2025 to Mar 2026, and inclisiran brought LDL down to 56–78. In <strong>Jun 2026</strong> endoscopy showed a <strong>chronic ulcer at the bypass stoma, pangastritis, and H. pylori positive (RUT +++)</strong>; ultrasound showed grade-I fatty liver and new <strong>gallstones</strong>. On <strong>8 Sep 2026</strong> he had a <strong>presyncopal fall with head trauma</strong>. He was found to have <strong>melaena with an acute drop in Hb to 8.2</strong>, from a <strong>chronic ulcer just below the anastomosis (H. pylori RUT ++)</strong>, plus <strong>bile reflux</strong> and a <strong>hiatus hernia (Hill grade IV)</strong>. Brain MRI showed mild atrophy and grade-I microvascular change. EEG, echo and carotid Doppler were normal. He was treated with esomeprazole, sucralfate, tranexamic acid, and an H. pylori regimen (amoxicillin-clavulanate + levofloxacin). By <strong>13 Oct 2026</strong> Hb had recovered to 12.1, but ferritin was low again on 29 Sep 2026 (11.2): <strong>iron deficiency has recurred</strong>.<mark class="new"> The Jun 2026 H. pylori treatment was changed by the patient, on a doctor friend’s advice, to vonoprazan + high-dose amoxicillin (dual therapy). It did not clear the infection: the RUT was still positive on 9 Sep 2026. On 10 Sep 2026 two gastroenterologists each prescribed a different levofloxacin-based regimen. He had asked about bismuth quadruple or rifabutin-based therapy instead. He took the second one: dexlansoprazole + amoxicillin 1 g BD + levofloxacin 500 mg OD for 14 days, and is still on dexlansoprazole 30 mg BD and sucralfate suspension 2 tsp 6-hourly. Between Sep 2025 and Jun 2026 he used tirzepatide for weight loss (down to 69 kg; 72 kg now).</mark></p>
+<hr />
+<h2 id="chronological-timeline">Chronological timeline</h2>
+<h3 id="04-jul-2017--bariatric-surgery-admission-apollo-hospitals-bangalore-oagb-surgery-discharge-report-7-july-2017pdf">04 Jul 2017 — Bariatric surgery admission (Apollo Hospitals, Bangalore) [OAGB Surgery Discharge Report 7 July 2017.pdf]</h3>
+<ul>
+<li>Admitted 03 Jul, discharged 07 Jul 2017. Age 49.</li>
+<li>Diagnoses: morbid obesity, hypertension, hypersomnia, dyslipidaemia. Not diabetic, no CAD, no asthma.</li>
+<li><strong>Procedure: laparoscopic mini gastric bypass (LAP MGB) under GA, 04 Jul 2017.</strong> Intra-op: enlarged liver, small gastric pouch, gastrojejunal anastomosis at 155 cm. Uneventful post-op; gastrografin study normal.</li>
+<li>Discharge meds: pantoprazole 40 mg BD, multivitamin (Zevit), nebivolol 5 mg, Bizoran (amlodipine/olmesartan) 20/5, armodafinil 150 mg, Ritalin 10 mg BD, niacin + aspirin 500/75, vitamin D3 60 000 IU weekly ×8 weeks, calcium (CCM), probiotic (Andoxin) ×3 months.</li>
+</ul>
+<h3 id="late-2023--jan-2025--symptom-onset-summary-26-march-2025docx">Late 2023 – Jan 2025 — Symptom onset [Summary 26 March 2025.docx]</h3>
+<ul>
+<li>About 1.5 years of weakness, lethargy, loss of interest, and <strong>libido falling to zero</strong> despite PDE5 inhibitors.</li>
+<li>Since <strong>Dec 2024</strong>: feels feverish without measured fever.</li>
+<li>Pica: has been eating raw rice for 6–7 months (sign of iron deficiency), and has a perverted sense of taste.</li>
+<li>Took a 5-day azithromycin course in early Feb 2025.</li>
+<li class="new">Since <strong>late 2024</strong>: severe sensitivity to cold. Feels cold even at 28 °C in an air-conditioned room. (TSH was normal at 1.19 in Feb 2025.)</li>
+</ul>
+<h3 id="08-feb-2025--first-labs-labaid-ref-dr-johor-dutta">08 Feb 2025 — First labs (Labaid; ref. Dr. Johor Dutta)</h3>
+<div class="tw"><table>
+<thead>
+<tr class="header">
+<th>Test</th>
+<th>Result</th>
+<th>Ref</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Hb / MCV / MCH / RDW-CV (from Rx note)</td>
+<td><strong>10.0 L / 67.4 L / 20.8 L / 19.1 H</strong>; WBC 7 600; Plt 360 000; ESR 28</td>
+<td>—</td>
+</tr>
+<tr class="even">
+<td>CRP</td>
+<td><strong>6.4 H</strong> mg/L</td>
+<td>&lt;5</td>
+</tr>
+<tr class="odd">
+<td>ALT / AST</td>
+<td>34 / 29 U/L</td>
+<td>≤41 / ≤37</td>
+</tr>
+<tr class="even">
+<td>Creatinine / eGFR</td>
+<td><strong>1.28</strong> mg/dL / 66</td>
+<td>0.7–1.3</td>
+</tr>
+<tr class="odd">
+<td>CK (CPK)</td>
+<td><strong>220 H</strong> U/L</td>
+<td>24–190</td>
+</tr>
+<tr class="even">
+<td>LDL</td>
+<td><strong>189 (high)</strong> mg/dL</td>
+<td>&lt;100</td>
+</tr>
+<tr class="odd">
+<td>Triglycerides</td>
+<td><strong>164 H</strong> mg/dL</td>
+<td>&lt;150</td>
+</tr>
+<tr class="even">
+<td>TSH</td>
+<td>1.19 µIU/mL</td>
+<td>0.3–4.5</td>
+</tr>
+<tr class="odd">
+<td>Total testosterone</td>
+<td>3.66 ng/mL (the prescription records it as 3.99)</td>
+<td>1.71–7.89</td>
+</tr>
+<tr class="even">
+<td>Vitamin D 25-OH</td>
+<td><strong>18.1 (insufficient)</strong> ng/mL</td>
+<td>30–100</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="12-feb-2025--opd-internal-medicine-ihl-dr-mustafizur-rahman-apollo-imperial-hospital-prescriptions-feb-mar25pdf-p56">12 Feb 2025 — OPD, Internal Medicine, IHL (Dr. Mustafizur Rahman) [Apollo Imperial Hospital Prescriptions Feb-Mar25.pdf p5–6]</h3>
+<ul>
+<li>Vitals: T 98.4 °F, P 76, BP 130/80, SpO₂ 99%.</li>
+<li>Complaint: intermittent low-grade fever with body ache ×1 month.</li>
+<li>Provisional diagnosis: <strong>microcytic hypochromic anaemia; PUO</strong> (pyrexia of unknown origin); vitamin D deficiency.</li>
+<li>Rx: ciprofibrate 100 mg, vitamin D 200 000 IU ×2 doses, albendazole, paracetamol.</li>
+<li>Ordered: iron studies, blood culture, typhoid serology, triple antigen, urine RME, CEA, CA 19-9, OGTT, calcium, chest X-ray, abdominal ultrasound.</li>
+</ul>
+<h3 id="13-feb-2025--work-up-labaid--popular-diagnostic">13 Feb 2025 — Work-up (Labaid + Popular Diagnostic)</h3>
+<div class="tw"><table>
+<thead>
+<tr class="header">
+<th>Test</th>
+<th>Result</th>
+<th>Ref</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Ferritin</strong></td>
+<td><strong>4.55 L</strong> ng/mL</td>
+<td>25–350</td>
+</tr>
+<tr class="even">
+<td>Serum iron</td>
+<td><strong>28 L</strong> µg/dL</td>
+<td>65–175</td>
+</tr>
+<tr class="odd">
+<td>TIBC</td>
+<td>411 µg/dL</td>
+<td>250–450</td>
+</tr>
+<tr class="even">
+<td>Salmonella Typhi IgG / IgM (ICT)</td>
+<td><strong>Positive / Positive</strong></td>
+<td>—</td>
+</tr>
+<tr class="odd">
+<td>Triple antigen</td>
+<td>Rickettsia OX2, OXK, OX19 <strong>1:160 (significant, &gt;1:80)</strong>; Brucella 1:80 (not significant); Widal TO/TH/AO/AH/BO/BH all 1:80 (not significant, cut-off ≥1:160)</td>
+<td>—</td>
+</tr>
+<tr class="even">
+<td>Blood culture</td>
+<td>No growth</td>
+<td>—</td>
+</tr>
+<tr class="odd">
+<td>CEA</td>
+<td>2.66 ng/mL (negative)</td>
+<td>&lt;5.09</td>
+</tr>
+<tr class="even">
+<td>CA 19-9</td>
+<td>2.54 U/mL (negative)</td>
+<td>&lt;39</td>
+</tr>
+<tr class="odd">
+<td>Calcium</td>
+<td>8.7 mg/dL</td>
+<td>8.4–10.4</td>
+</tr>
+<tr class="even">
+<td>Urine RME</td>
+<td>Albumin trace; no RBC; pus cells 1–2</td>
+<td>—</td>
+</tr>
+<tr class="odd">
+<td>Vitamin B12 (Popular)</td>
+<td>527 pg/mL</td>
+<td>179–1162</td>
+</tr>
+<tr class="even">
+<td>Chest X-ray PA (Labaid)</td>
+<td>Normal</td>
+<td>—</td>
+</tr>
+<tr class="odd">
+<td>USG whole abdomen + PVR (Popular)</td>
+<td>Liver, GB, pancreas, spleen (8.1 cm) normal. <strong>Right renal cortical cyst 23×19 mm, thin septa, benign.</strong> PVR 20 ml. Prostate 17.6 ml, normal.</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="1415-feb-2025--admission-ihl-internal-medicine-apollo-imperial-hospital-prescriptions-feb-mar25pdf-p34">14–15 Feb 2025 — Admission, IHL Internal Medicine [Apollo Imperial Hospital Prescriptions Feb-Mar25.pdf p3–4]</h3>
+<ul>
+<li><strong>Diagnosis: enteric fever with rickettsial fever, with HTN.</strong> BP 120/80, P 75, afebrile on exam, CBG 5 mmol/L.</li>
+<li>Discharge Rx: <strong>ceftriaxone 2 g IV BD (14–27 Feb)</strong>, later switched by hand to cefuroxime (Roxim) 400 BD; <strong>doxycycline 100 mg BD (14–27 Feb)</strong>; pantoprazole 20 mg BD ×15 days; ciprofibrate 100 mg; modafinil ¼ BD; Retanil 10 mg ¼ BD; pramipexole 0.088 mg; midazolam 7.5 mg PRN; nebivolol 5 mg; escitalopram 10 mg; paracetamol PRN; albendazole.</li>
+<li>Advice: blood culture, endoscopy + colonoscopy, IV Maltofer 1 g then 500 mg.</li>
+<li>Patient's own summary: levofloxacin 500 mg OD 22–28 Feb was also given.</li>
+<li>Repeat CBC 16 Feb 2025: Hb 9.9, MCV 64.6, MCH 20.7, RDW 20.6, Plt 396 000.</li>
+</ul>
+<h3 id="02-mar-2025--hb-electrophoresis-ihl-capillary-hb-electrophoresispdf">02 Mar 2025 — Hb electrophoresis (IHL) [Capillary Hb Electrophoresis.pdf]</h3>
+<ul>
+<li>Hb 10.3 g/dL; <strong>HbA 98.1%, HbA2 1.9% (low)</strong>. Comment: low HbA2, consistent with iron deficiency; no β-thalassaemia trait pattern.</li>
+<li><strong>IV Maltofer 1 g given 02 Mar 2025</strong> (patient summary).</li>
+<li>02 Mar complaint: generalized weakness after the fever, and loose stools while on antibiotics.</li>
+</ul>
+<h3 id="04-mar-2025--cbc--upper-gi-endoscopy-labaid">04 Mar 2025 — CBC + upper GI endoscopy (Labaid)</h3>
+<ul>
+<li>CBC [CBC 04Mar2025.pdf]: <strong>Hb 9.9 L, Hct 31.5 L, MCV 69.1 L, MCH 21.8 L, RDW-CV 21.1 H</strong>; WBC 7.8; Plt 350; ESR 15.</li>
+<li><strong>Upper GI endoscopy</strong> [Upper GI Tract Endoscopy 4 Mar25.pdf]: oesophagus normal. Resected stomach with <strong>erosions at the margin of the gastro-enterostomy stoma</strong> and the adjacent stomach. Afferent and efferent loops normal. No biopsy taken.</li>
+</ul>
+<h3 id="08-mar-2025--opd-follow-up-ihl-apollo-imperial-hospital-prescription-8mar25pdf-also-p12-of-the-feb-mar-file">08 Mar 2025 — OPD follow-up, IHL [Apollo Imperial Hospital Prescription 8Mar25.pdf; also p1–2 of the Feb-Mar file]</h3>
+<ul>
+<li>Diagnoses: <strong>vitamin D deficiency with iron-deficiency anaemia; antibiotic-associated pseudomembranous colitis; gastric erosion.</strong> PUO still under investigation.</li>
+<li>Rx: rosuvastatin 5 mg at night, CoQ10 100 mg, <strong>folic acid 5 mg ×3 months</strong>, <strong>vonoprazan 20 mg BD ×2 weeks → OD ×6 weeks → PRN</strong>, vitamin D 200 000 IU ×2, probiotic ×14 days, <strong>vancomycin 250 mg TDS ×7 days</strong>, Maltofer 1 g + 500 mg IV, albendazole, paracetamol, ORS, <strong>inclisiran (Leqvio) SC on day 1, then at 3 and 6 months</strong>.</li>
+<li>Planned: CBC/ESR and CPK in 6 weeks; total colonoscopy; endoscopy with RUT for H. pylori.</li>
+<li>Patient summary: <strong>Maltofer 500 mg on 10 Mar 2025; Leqvio given 14 Mar 2025</strong> (next doses due 14 Jun and 14 Dec 2025).</li>
+</ul>
+<h3 id="19-mar-2025--stool-tests-ihl">19 Mar 2025 — Stool tests (IHL)</h3>
+<ul>
+<li><strong>H. pylori stool antigen: negative</strong> [H. Pylori .pdf]. Note: this was done while on/after vonoprazan, so it may be a false negative.</li>
+<li><strong>Stool occult blood: negative</strong> [Stool Occult Blood.pdf].</li>
+</ul>
+<h3 id="20-mar-2025--colonoscopy--polypectomy-ihl-dr-atm-mohiuddin-chowdhury-colonoscopy-and-biopsy-report-20-march-2025pdf-biopsy-pdf">20 Mar 2025 — Colonoscopy + polypectomy (IHL, Dr. A.T.M. Mohiuddin Chowdhury) [Colonoscopy and Biopsy Report 20 March 2025.pdf; Biopsy .pdf]</h3>
+<ul>
+<li>Examined up to the terminal ileum. <strong>Elevated growing-type lesion / polyp, about 15×15 mm, at the splenic flexure</strong>, removed with hot biopsy forceps; haemostasis achieved. Few scattered erosions in the transverse and descending colon. Rest normal.</li>
+<li><strong>Histopathology (reported 24 Mar 2025): non-specific chronic inflammation, no evidence of malignancy.</strong></li>
+</ul>
+<h3 id="26-mar-2025--patient-written-status-summary-26-march-2025docx">26 Mar 2025 — Patient-written status [Summary 26 March 2025.docx]</h3>
+<ul>
+<li>Still weak and feels feverish, without measured fever.</li>
+</ul>
+<h3 id="17-apr-2025--post-iv-iron-check-labaid">17 Apr 2025 — Post-IV-iron check (Labaid)</h3>
+<ul>
+<li>CBC: <strong>Hb 13.8 (normalised)</strong>, MCV 86.7, <strong>RDW-CV 32.0 H / RDW-SD 101.3 H</strong> (mixed old and new red-cell populations after iron), ESR 02.</li>
+<li>Ferritin <strong>107</strong> ng/mL; serum iron 61 (slightly low); creatinine 0.75, eGFR 120.</li>
+</ul>
+<h3 id="14-jun-2025--cbc-labaid">14 Jun 2025 — CBC (Labaid)</h3>
+<ul>
+<li><strong>Hb 15.1</strong>, MCV 91.4, RDW-CV 15.5 H, ESR 05. Normal.</li>
+</ul>
+<h3 id="27-jul-2025--labaid">27 Jul 2025 — Labaid</h3>
+<ul>
+<li><strong>LDL 56</strong> mg/dL (from 189; on inclisiran ± rosuvastatin), TG 125.</li>
+<li>Ferritin 207. <strong>ANA 20.8 AU/mL, negative.</strong></li>
+</ul>
+<h3 id="04-sep-2025--labaid">04 Sep 2025 — Labaid</h3>
+<ul>
+<li>CBC: Hb 14.7, WBC 10.09 (upper normal), neutrophils 65%, RDW-CV 15.1 H, ESR 02.</li>
+<li>Ferritin 193.</li>
+<li><strong>Salmonella Typhi IgG negative / IgM positive</strong> (ICT; reason for the test not documented).</li>
+</ul>
+<div class="new">
+<h3 id="08-sep-2025--opd-cscr">08 Sep 2025 — OPD, Dr. M. Mustafizur Rahman (CSCR) [DR Mostafiz Prescription on 8 September 2025.pdf]</h3>
+<ul>
+<li>Weight 79.6 kg, height 164 cm. Pulse 60/min, BP 130/80. Heart, lungs and abdomen: no abnormality noted.</li>
+<li>Complaint: feeling feverish for 8 days, with no high-grade fever.</li>
+<li>History listed: idiopathic hypersomnia with parasomnia, HTN, bariatric surgery (2017), dyslipidaemia, typhoid and rickettsial fever (Feb 2025), iron-deficiency anaemia with vitamin D deficiency, antibiotic-associated colitis, gastric erosion, splenic-flexure polyp removed Mar 2025 (no malignancy), <strong>erectile dysfunction</strong>. IV iron given Mar 2025.</li>
+<li>Reviewed the 4 Sep 2025 labs: Hb 14.7, WBC 10 090, platelets 258 000, ESR 02, RDW-CV 15.1, ferritin 193, typhoid IgG negative / IgM positive, LDL 56, TG 125.</li>
+<li>Medicines at the time: modafinil 100 mg BD; <strong>bempedoic acid 180 mg OD</strong>; inclisiran (Leqvio) every 6 months; methylphenidate 2.5 mg BD; nebivolol (Nebicard) 5 mg at night; escitalopram (Nexcital) 5 mg. Also “Sipam 30 / Filfresh 3” and “Orantil 25” in the morning (handwriting unclear; please confirm these names).</li>
+<li>Prescribed: <strong>azithromycin 500 mg</strong> (dose and duration written in Bengali) and vitamin D3. Tamen 500 was crossed out.</li>
+</ul>
+</div>
+<div class="new">
+<h3 id="sep-2025-jun-2026--tirzepatide">Sep 2025 – Jun 2026 — Tirzepatide for weight loss [My latest Info.docx]</h3>
+<ul>
+<li>On the advice of his bariatric surgeon he took a few tirzepatide injections to reduce weight.</li>
+<li>Weight fell from 79.6 kg (Sep 2025) to <strong>69 kg</strong> (about 10 kg), and he then stopped. He reports <strong>72 kg</strong> as of 24 Oct 2026.</li>
+</ul>
+</div>
+<h3 id="02-nov-2025--labaid-panel">02 Nov 2025 — Labaid panel</h3>
+<div class="tw"><table>
+<thead>
+<tr class="header">
+<th>Test</th>
+<th>Result</th>
+<th>Ref</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Ferritin</td>
+<td>238.75</td>
+<td>25–350</td>
+</tr>
+<tr class="even">
+<td>Serum iron</td>
+<td>126</td>
+<td>65–175</td>
+</tr>
+<tr class="odd">
+<td>CRP</td>
+<td>1.4</td>
+<td>&lt;5</td>
+</tr>
+<tr class="even">
+<td>LFT</td>
+<td>Bilirubin 0.70, AST 24, ALT 27, ALP 49</td>
+<td>normal</td>
+</tr>
+<tr class="odd">
+<td>Calcium / Mg / K</td>
+<td>9.1 / 1.9 / 3.70</td>
+<td>normal</td>
+</tr>
+<tr class="even">
+<td>Uric acid</td>
+<td>5.4</td>
+<td>3.5–7.2</td>
+</tr>
+<tr class="odd">
+<td><strong>Free testosterone</strong></td>
+<td>16.93 pg/mL</td>
+<td>9.57–40.6 (age 40–59)</td>
+</tr>
+<tr class="even">
+<td><strong>Prolactin</strong></td>
+<td><strong>2.19 L</strong> ng/mL</td>
+<td>3.45–17.42</td>
+</tr>
+<tr class="odd">
+<td>Blood culture</td>
+<td>Report page has no result printed</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="27-feb--16-mar-2026--labaid">27 Feb – 16 Mar 2026 — Labaid</h3>
+<ul>
+<li>27 Feb: CBC <strong>Hb 13.8</strong>, MCV 95.9, MCH 32.3 H, RDW-CV 15.4 H, ESR 10. Creatinine 0.97, eGFR 92.</li>
+<li>02 Mar: Ferritin 148.10. LFT: bilirubin 0.4, AST 19, ALT 40, ALP 99.</li>
+<li>16 Mar: LDL 78, TG 95. <strong>Total testosterone 5.51</strong> ng/mL (normal). <strong>Free testosterone 12.22</strong> pg/mL (low-normal for age).</li>
+</ul>
+<div class="new">
+<h3 id="06-jun-2026--opd-cscr">06 Jun 2026 — OPD, Dr. M. Mustafizur Rahman (CSCR) [Dr Mustafiz Prescription 6 June 2026.pdf]</h3>
+<ul>
+<li>Complaint: <strong>upper abdominal pain for about 1 month</strong>. Epigastric tenderness on exam. Pulse 71/min, BP 123/86.</li>
+<li><strong>Weight 70 kg</strong>, down from 79.6 kg in Sep 2025 (about 10 kg in 9 months), while taking tirzepatide.</li>
+<li>Medicines at the time: methylphenidate 5 mg BD, modafinil 100 mg BD, amlodipine 10 mg at night, pramipexole 0.088 mg at night, vonoprazan 10 mg at night, bempedoic acid (Winolip) 180 mg.</li>
+<li>Ordered ECG, abdominal ultrasound with PVR, and upper GI endoscopy (referred to Dr. A.T.M. Mohiuddin Chowdhury).</li>
+<li>Results reviewed 9 Jun 2026: <strong>ECG sinus bradycardia</strong>; ultrasound with multiple gallstones, fatty liver and benign right renal cyst; endoscopy with pangastritis, chronic ulcer at the stoma margin, RUT positive.</li>
+<li><strong>Prescribed (levofloxacin triple therapy, 14 days):</strong> vonoprazan (Vonomax) 20 mg BD ×14 days, then 20 mg once daily for a further 1.5 months; levofloxacin (Evo) 500 mg, <strong>1 tablet at night</strong> ×14 days; amoxicillin (Moxil) 500 mg, 2 capsules BD ×14 days. Also itopride (Itogut) 50 mg TDS, Algin 50 TDS and paracetamol (Napa One) when needed. He did not take these last three; his note says they were for pain, vomiting and gas, which he did not have.</li>
+<li><strong>What he actually took</strong> (from “My latest Info”): on a doctor friend’s advice, who said levofloxacin resistance is common in Bangladesh, he left out levofloxacin. He took vonoprazan with <strong>amoxicillin 500 mg, 2 tablets TDS ×14 days</strong> (vonoprazan–amoxicillin dual therapy) and <strong>sucralfate 1 g QID for 2 months</strong>. The plan was a 15-day break before an H. pylori test. He <strong>stopped vonoprazan and sucralfate on 30 Aug 2026</strong>. No H. pylori test result from that break is on file.</li>
+</ul>
+</div>
+<h3 id="07-jun-2026--upper-gi-endoscopy-ihl--abdominal-ultrasound-popular">07 Jun 2026 — Upper GI endoscopy (IHL) + abdominal ultrasound (Popular)</h3>
+<ul>
+<li><strong>Endoscopy</strong> [Endoscopy Report 7 June 2026.pdf]: post-gastrojejunostomy bypass status. Oesophagus normal, LES lax. <strong>Chronic white-base ulcer at the bypass stoma; inflamed gastric mucosa with erythema and erosions throughout (pangastritis).</strong> Loops intact. Biopsy taken for RUT and histopathology; <strong>RUT for H. pylori: positive +++</strong>. No histopathology report for this biopsy is in the folder.</li>
+<li><strong>USG whole abdomen + PVR</strong> [Ultrasonogram of Whole Abdomen 7 June 2026 .pdf]: <strong>fatty liver grade I</strong> (raised hepatorenal contrast); <strong>cholelithiasis</strong> (multiple stones 5.4–5.7 mm), CBD not dilated; right renal cortical cyst <strong>27×19 mm</strong> (was 23×19 in Feb 2025), benign; PVR 12 ml; prostate 16.8 ml.</li>
+</ul>
+<h3 id="0810-sep-2026--emergency-admission-ihl-internal-medicine-dr-majibul-haque-ihl-discharge-summary-10-sept-2026pdf">08–10 Sep 2026 — Emergency admission, IHL Internal Medicine (Dr. Majibul Haque) [IHL Discharge Summary 10 Sept 2026.pdf]</h3>
+<ul>
+<li><strong>Presentation (08 Sep, 00:43):</strong> presyncopal attack, then a fall with <strong>blunt trauma to the occiput</strong>. GCS 15/15, BP 100/70, P 92, SpO₂ 100%, T 98 °F, CBG 7.3 mmol/L, dehydration ++, bilateral extensor plantar responses, power 5/5.</li>
+<li><strong>Discharge diagnosis: duodenal ulcer with melaena</strong>, with HTN, history of bariatric surgery, dyslipidaemia, and idiopathic hypersomnia with parasomnia.</li>
+<li><strong>Labs:</strong>
+<ul>
+<li>08 Sep CMP: glucose 6.1 mmol/L; <strong>total protein 5.3 L</strong>; albumin 3.6; <strong>calcium 8.1 L</strong>; Na 137; K 3.9; Cl 108; <strong>HCO₃ 21 L</strong>; BUN 23 (upper limit); creatinine 0.89; eGFR 87; LFT normal.</li>
+<li>09 Sep CBC: <strong>Hb 8.7 L, Hct 24.1, RBC 2.74</strong>, MCV 88, Plt 200, WBC 8.13.</li>
+<li>10 Sep CBC: <strong>Hb 8.2 L, Hct 23.1, RBC 2.62</strong>, MCV 88.2, Plt 220, WBC 7.88.</li>
+<li>09 Sep coagulation: PT 11.9 s, INR 1.04, APTT 28.2 s, fibrinogen 2.2 g/L, D-dimer 0.13 (all normal).</li>
+<li>09 Sep stool: <strong>blackish, offensive</strong>, semi-solid; RBC 0–2/HPF; <strong>occult blood positive</strong>.</li>
+</ul></li>
+<li><strong>Imaging / tests:</strong>
+<ul>
+<li><strong>MRI brain, epilepsy protocol (08 Sep)</strong>: mild generalized cerebral atrophy; <strong>bilateral chronic microvascular white-matter ischaemic change (grade I)</strong>; hippocampi normal; no acute infarct, haemorrhage, mass or dysplasia.</li>
+<li><strong>Bedside EEG (09 Sep)</strong>: normal awake EEG, no epileptiform discharges. Excess bilateral frontal beta, suggesting an anxiety state. HR 90–96.</li>
+<li><strong>Transthoracic echo (09 Sep)</strong>: normal chambers and valves, <strong>LVEF 61%</strong>, TAPSE 20 mm, no RWMA, no effusion. TR Vmax 193 cm/s (PG 15 mmHg).</li>
+<li><strong>Carotid + vertebral Doppler (09 Sep)</strong>: normal. IMT 0.3–0.4 mm, no plaque.</li>
+<li><strong>Upper GI endoscopy + RUT (09 Sep)</strong> [Endoscopy Report 9 Sept 2026.pdf]: partial-gastrectomy status; <strong>large amount of bile in the stomach</strong>; <strong>hiatus hernia</strong>; duodenal bulb absent; <strong>large chronic white-base ulcer just below the anastomosis margin</strong>; <strong>RUT H. pylori positive ++</strong>. Impression: <strong>chronic (duodenal/anastomotic) ulcer post gastrectomy; bile reflux disease; hiatus hernia, Hill grade IV.</strong> ("Endoscopy 9 Sept 26 without Report.pdf" is the same study's images.)</li>
+</ul></li>
+<li><strong>Discharge Rx (10 Sep 2026):</strong> amoxicillin-clavulanate 1 g TDS ×14 days + levofloxacin 500 mg OD ×14 days (H. pylori eradication); <strong>esomeprazole 20 mg BD</strong>; sucralfate 1 g/5 ml 2 tsp 6-hourly ×2 months; <strong>tranexamic acid 500 mg TDS ×3 days</strong>; domperidone 10 mg TDS ×3 months; folic acid 5 mg BD ×2 months; telmisartan 40 mg (handwritten: changed to amlodipine 10 mg at night); clonazepam 0.5 mg at night ×15 days; ispaghula; paracetamol PRN; povidone-iodine ointment to the scalp bruise. Handwritten: continue methylphenidate and modafinil. Follow up with Dr. Mohiuddin Chowdhury (GI) in 15 days.</li>
+<li class="new"><strong>Patient’s account:</strong> the discharge prescription included esomeprazole 20 mg BD, amoxicillin-clavulanate, levofloxacin and sucralfate (see the H. pylori table for what he took). He had been passing dark, bloody stools (melaena) before the faint, and a drop in blood pressure is thought to have contributed. He asked the doctor whether clavulanic acid is recommended for H. pylori and about levofloxacin resistance; the regimen was not changed.</li>
+</ul>
+<div class="new">
+<h3 id="10-sep-2026--second-gi-opinion">10 Sep 2026 — Second gastroenterology opinion, Dr. Mostafa Noor Mohsin (Parkview Hospital) [Dr Mostafa Nur Prescription on 10 Sept 2026.pdf]</h3>
+<ul>
+<li>Notes: history of bleeding, post bariatric surgery, peptic ulcer disease, HTN, idiopathic hypersomnia.</li>
+<li><strong>Prescribed:</strong> dexlansoprazole (Delanzo) 30 mg, <strong>1+0+2</strong> before meals for 3 months; amoxicillin (Tycil) 500 mg, 2+0+2 ×14 days; levofloxacin (Trevox) 500 mg at night ×14 days.</li>
+<li><strong>Patient’s account:</strong> he told this doctor that a similar vonoprazan–amoxicillin dual course two months earlier had failed. He asked whether optimised bismuth quadruple or rifabutin triple therapy would suit him better; the regimen was not changed. He took dexlansoprazole 30 mg 1+0+2 for 3 days, then 1+0+1.</li>
+<li><strong>What he took:</strong> this regimen, not the IHL discharge one. <strong>Amoxicillin 500 mg, 2 capsules BD + levofloxacin 500 mg once daily for 14 days.</strong> He is still taking <strong>dexlansoprazole 30 mg 1+0+1</strong> as of 24 Oct 2026, and plans to continue until 30 Nov 2026 or until he next sees a doctor, whichever is earlier.</li>
+<li><strong>Also since 10 Sep 2026:</strong> sucralfate suspension (from the IHL discharge prescription), <strong>2 tsp 6-hourly</strong> as prescribed (prescribed for 2 months), ongoing.</li>
+</ul>
+</div>
+<h3 id="29-sep-2026--post-bleed-check-labaid">29 Sep 2026 — Post-bleed check (Labaid)</h3>
+<ul>
+<li>CBC: <strong>Hb 9.9 L, Hct 30.5 L, RBC 3.48 L</strong>, MCV 87.5, RDW-CV 15.6 H, WBC 5.51, Plt 369, ESR 12.</li>
+<li><strong>Ferritin 11.20 L</strong> ng/mL (from 148 in Mar 2026): <strong>iron stores depleted again.</strong></li>
+<li>Note: "CBC 11 Sept 2026.pdf" is byte-identical to "CBC 29 Sept 2026.pdf" (sample date 29/09/2026). There is no separate 11 Sep result.</li>
+</ul>
+<h3 id="13-oct-2026--latest-labs-labaid">13 Oct 2026 — Latest labs (Labaid)</h3>
+<ul>
+<li>CBC: <strong>Hb 12.1 L</strong> (recovering), Hct 36.9 L, RBC 4.24, MCV 84.4, RDW-CV 16.3 H, WBC 5.32, <strong>lymphocytes 48% H</strong>, Plt 280, ESR 05.</li>
+<li>Calcium 9.0; total protein 7.6; albumin 3.7; bilirubin 0.40; AST 19; ALT 35; ALP 109; <strong>creatinine 1.06, eGFR 82</strong>.</li>
+<li><strong>Folate 13.3 ng/mL</strong> (ref 4.6–34.8) and <strong>vitamin B12 690.39 pg/mL</strong> (ref 192–827): both normal, so the anaemia is not due to folate or B12 deficiency. Folate was measured while on folic acid 5 mg BD. Sample taken 13 Oct 2026, reported 17 Oct 2026; referred by Dr. Surajit Roy Chowdhury (Psychiatry). [Folate and Vitamin B12 13 October 2026.pdf]</li>
+</ul>
+<hr />
+<h2 id="trend-tables">Trend tables</h2>
+<h3 id="haemoglobin--red-cells">Haemoglobin &amp; red cells</h3>
+<div class="tw"><table>
+<thead>
+<tr class="header">
+<th>Date</th>
+<th>Hb (g/dL)</th>
+<th>MCV (fL)</th>
+<th>RDW-CV (%)</th>
+<th>Context</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>08 Feb 2025</td>
+<td>10.0 L</td>
+<td>67.4 L</td>
+<td>19.1 H</td>
+<td>Iron deficiency</td>
+</tr>
+<tr class="even">
+<td>16 Feb 2025</td>
+<td>9.9 L</td>
+<td>64.6 L</td>
+<td>20.6 H</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>02 Mar 2025</td>
+<td>10.3 L</td>
+<td>—</td>
+<td>—</td>
+<td>Maltofer 1 g given</td>
+</tr>
+<tr class="even">
+<td>04 Mar 2025</td>
+<td>9.9 L</td>
+<td>69.1 L</td>
+<td>21.1 H</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>17 Apr 2025</td>
+<td>13.8</td>
+<td>86.7</td>
+<td>32.0 H</td>
+<td>After IV iron</td>
+</tr>
+<tr class="even">
+<td>14 Jun 2025</td>
+<td>15.1</td>
+<td>91.4</td>
+<td>15.5 H</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>04 Sep 2025</td>
+<td>14.7</td>
+<td>91.7</td>
+<td>15.1 H</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>27 Feb 2026</td>
+<td>13.8</td>
+<td>95.9</td>
+<td>15.4 H</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>09 Sep 2026</td>
+<td>8.7 L</td>
+<td>88.0</td>
+<td>14.2 H</td>
+<td>Melaena / ulcer bleed</td>
+</tr>
+<tr class="even">
+<td>10 Sep 2026</td>
+<td>8.2 L</td>
+<td>88.2</td>
+<td>14.3 H</td>
+<td>Lowest value</td>
+</tr>
+<tr class="odd">
+<td>29 Sep 2026</td>
+<td>9.9 L</td>
+<td>87.5</td>
+<td>15.6 H</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>13 Oct 2026</td>
+<td>12.1 L</td>
+<td>84.4</td>
+<td>16.3 H</td>
+<td>Recovering</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="iron-studies">Iron studies</h3>
+<div class="tw"><table>
+<thead>
+<tr class="header">
+<th>Date</th>
+<th>Ferritin (ng/mL)</th>
+<th>Serum iron (µg/dL)</th>
+<th>TIBC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>13 Feb 2025</td>
+<td><strong>4.55 L</strong></td>
+<td><strong>28 L</strong></td>
+<td>411</td>
+</tr>
+<tr class="even">
+<td>17 Apr 2025</td>
+<td>107</td>
+<td>61 L</td>
+<td>—</td>
+</tr>
+<tr class="odd">
+<td>27 Jul 2025</td>
+<td>207</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr class="even">
+<td>04 Sep 2025</td>
+<td>193</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr class="odd">
+<td>02 Nov 2025</td>
+<td>238.75</td>
+<td>126</td>
+<td>—</td>
+</tr>
+<tr class="even">
+<td>02 Mar 2026</td>
+<td>148.10</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr class="odd">
+<td>29 Sep 2026</td>
+<td><strong>11.20 L</strong></td>
+<td>—</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="lipids-statin-intolerant-inclisiran-from-14-mar-2025">Lipids (statin-intolerant; inclisiran from 14 Mar 2025)</h3>
+<div class="tw"><table>
+<thead>
+<tr class="header">
+<th>Date</th>
+<th>LDL (mg/dL)</th>
+<th>TG (mg/dL)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>08 Feb 2025</td>
+<td><strong>189</strong></td>
+<td><strong>164 H</strong></td>
+</tr>
+<tr class="even">
+<td>27 Jul 2025</td>
+<td>56</td>
+<td>125</td>
+</tr>
+<tr class="odd">
+<td>16 Mar 2026</td>
+<td>78</td>
+<td>95</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="kidney-function">Kidney function</h3>
+<div class="tw"><table>
+<thead>
+<tr class="header">
+<th>Date</th>
+<th>Creatinine (mg/dL)</th>
+<th>eGFR</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>08 Feb 2025</td>
+<td>1.28</td>
+<td>66</td>
+</tr>
+<tr class="even">
+<td>17 Apr 2025</td>
+<td>0.75</td>
+<td>120</td>
+</tr>
+<tr class="odd">
+<td>27 Feb 2026</td>
+<td>0.97</td>
+<td>92</td>
+</tr>
+<tr class="even">
+<td>08 Sep 2026</td>
+<td>0.89</td>
+<td>87</td>
+</tr>
+<tr class="odd">
+<td>13 Oct 2026</td>
+<td>1.06</td>
+<td>82</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="hormones">Hormones</h3>
+<div class="tw"><table>
+<thead>
+<tr class="header">
+<th>Date</th>
+<th>Total T (ng/mL)</th>
+<th>Free T (pg/mL)</th>
+<th>Other</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>08 Feb 2025</td>
+<td>3.66</td>
+<td>—</td>
+<td>TSH 1.19</td>
+</tr>
+<tr class="even">
+<td>02 Nov 2025</td>
+<td>—</td>
+<td>16.93</td>
+<td><strong>Prolactin 2.19 L</strong></td>
+</tr>
+<tr class="odd">
+<td>16 Mar 2026</td>
+<td>5.51</td>
+<td>12.22</td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="vitamins">Vitamins</h3>
+<div class="tw"><table>
+<thead>
+<tr class="header">
+<th>Date</th>
+<th>Vitamin B12 (pg/mL)</th>
+<th>Folate (ng/mL)</th>
+<th>Vitamin D 25-OH (ng/mL)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>08–13 Feb 2025</td>
+<td>527</td>
+<td>—</td>
+<td><strong>18.1 (insufficient)</strong></td>
+</tr>
+<tr class="even">
+<td>13 Oct 2026</td>
+<td>690.39</td>
+<td>13.3</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="inflammation--infection-serology">Inflammation / infection serology</h3>
+<div class="tw"><table>
+<thead>
+<tr class="header">
+<th>Date</th>
+<th>CRP (mg/L)</th>
+<th>Typhoid ICT IgG/IgM</th>
+<th>Other</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>08–13 Feb 2025</td>
+<td>6.4 H</td>
+<td>+/+</td>
+<td>Rickettsia OX2/OXK/OX19 1:160; blood culture negative</td>
+</tr>
+<tr class="even">
+<td>04 Sep 2025</td>
+<td>—</td>
+<td>−/+</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>02 Nov 2025</td>
+<td>1.4</td>
+<td>—</td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="gi-findings-over-time">GI findings over time</h3>
+<div class="tw"><table>
+<thead>
+<tr class="header">
+<th>Date</th>
+<th>Study</th>
+<th>Key finding</th>
+<th>H. pylori</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>04 Mar 2025</td>
+<td>Upper GI endoscopy</td>
+<td>Erosions at gastro-enterostomy stoma</td>
+<td>Not tested</td>
+</tr>
+<tr class="even">
+<td>19 Mar 2025</td>
+<td>Stool tests</td>
+<td>Occult blood negative</td>
+<td>Stool antigen negative (possibly suppressed by vonoprazan)</td>
+</tr>
+<tr class="odd">
+<td>20 Mar 2025</td>
+<td>Colonoscopy</td>
+<td>15 mm splenic-flexure lesion removed (benign, chronic inflammation); scattered colonic erosions</td>
+<td>—</td>
+</tr>
+<tr class="even">
+<td>07 Jun 2026</td>
+<td>Upper GI endoscopy</td>
+<td>Chronic stomal ulcer + pangastritis</td>
+<td><strong>RUT +++</strong></td>
+</tr>
+<tr class="odd">
+<td>09 Sep 2026</td>
+<td>Upper GI endoscopy</td>
+<td>Large chronic ulcer below anastomosis; bile reflux; hiatus hernia Hill IV; melaena</td>
+<td><strong>RUT ++</strong><mark class="new"> (after the Jun–Aug dual course; treatment failure)</mark></td>
+</tr>
+</tbody>
+</table></div>
+<div class="new">
+<h3 id="h-pylori-treatment-courses">H. pylori treatment courses</h3>
+<div class="tw"><table>
+<thead><tr><th>Start</th><th>Prescribed by</th><th>Regimen prescribed</th><th>What was taken</th><th>Result</th></tr></thead>
+<tbody>
+<tr><td>06 Jun 2026</td><td>Dr. M. Mustafizur Rahman</td><td>Vonoprazan 20 mg BD + levofloxacin 500 mg at night + amoxicillin 1 g BD, 14 days</td><td>Vonoprazan + amoxicillin 1 g TDS, 14 days (no levofloxacin); sucralfate 1 g QID; stopped 30 Aug 2026</td><td><strong>Failed</strong>: RUT ++ on 9 Sep 2026</td></tr>
+<tr><td>10 Sep 2026</td><td>IHL discharge (Dr. Majibul Haque)</td><td>Esomeprazole 20 mg BD + amoxicillin-clavulanate 1 g TDS + levofloxacin 500 mg OD, 14 days</td><td>Antibiotics and esomeprazole not taken; he followed the Parkview regimen (next row). <strong>Sucralfate suspension taken as prescribed, 2 tsp 6-hourly</strong>, since 10 Sep 2026, ongoing.</td><td>—</td></tr>
+<tr><td>10 Sep 2026</td><td>Dr. Mostafa Noor Mohsin</td><td>Dexlansoprazole 30 mg 1+0+2 (3 months) + amoxicillin 1 g BD + levofloxacin 500 mg OD, 14 days</td><td>As prescribed: amoxicillin 1 g BD + levofloxacin 500 mg OD ×14 days. Dexlansoprazole 1+0+2 ×3 days, then 1+0+1, continuing to 30 Nov 2026</td><td>No test on file yet</td></tr>
+</tbody></table></div>
+</div>
+<hr />
+<h2 id="active-problem-list-as-of-13-oct-2026">Active problem list (as of 13 Oct 2026)</h2>
+<ol type="1">
+<li><strong>Chronic marginal (anastomotic) ulcer after OAGB, with an upper-GI bleed (melaena) in Sep 2026.</strong> H. pylori positive in Jun and Sep 2026; eradication course started 10 Sep 2026. No eradication test result is on file yet.<mark class="new"> The Jun 2026 course (taken as vonoprazan–amoxicillin dual therapy) failed. Two different levofloxacin-based regimens were prescribed on 10 Sep 2026; he completed the dexlansoprazole + amoxicillin + levofloxacin course (14 days) and is still on dexlansoprazole 30 mg BD and sucralfate suspension 2 tsp 6-hourly. He has asked about bismuth quadruple or rifabutin-based therapy.</mark></li>
+<li><strong>Recurrent iron-deficiency anaemia</strong>: Hb 12.1 (recovering), ferritin 11.2 on 29 Sep 2026. Malabsorption after bypass plus GI blood loss is the likely mechanism. Folate (13.3) and B12 (690) were normal on 13 Oct 2026.</li>
+<li><strong>Bile reflux disease; hiatus hernia (Hill grade IV).</strong></li>
+<li class="new"><strong>Weight loss on tirzepatide</strong> (Sep 2025 – Jun 2026): 79.6 kg to 69 kg, then stopped; 72 kg on 24 Oct 2026.</li>
+<li class="new"><strong>Cold intolerance</strong> since late 2024: feels cold at 28 °C indoors. TSH normal (Feb 2025).</li>
+<li><strong>Presyncope with fall and occipital head trauma (Sep 2026).</strong> MRI: mild atrophy and grade-I small-vessel change. EEG, echo and carotids normal. Likely related to anaemia, volume loss and low BP (100/70).</li>
+<li><strong>Cholelithiasis</strong> (asymptomatic on report) and <strong>grade-I fatty liver</strong> (Jun 2026).</li>
+<li>Benign right renal cortical cyst, slowly enlarging (23→27 mm, Feb 2025 → Jun 2026).</li>
+<li>Hypertension (antihypertensive changed on discharge in Sep 2026).<mark class="new"> Sinus bradycardia on ECG, Jun 2026.</mark></li>
+<li>Dyslipidaemia, controlled on inclisiran<mark class="new"> and bempedoic acid</mark> (LDL 78).</li>
+<li>Idiopathic hypersomnia with parasomnia; restless legs syndrome; anxiety features on EEG.</li>
+<li>Low prolactin (Nov 2025) and previously reported low libido<mark class="new">; erectile dysfunction listed Sep 2025</mark>; testosterone normal.</li>
+<li>History (Feb 2025): enteric and rickettsial fever, treated; antibiotic-associated colitis, treated.</li>
+</ol>
+<h2 id="gaps--data-quality-notes-for-the-reader">Gaps / data-quality notes for the reader</h2>
+<ul>
+<li>No histopathology result for the Jun 2026 stoma-ulcer biopsy, and no H. pylori eradication test after the Sep 2026 regimen.<mark class="new"> A breath or stool test is usually done at least 4 weeks after the antibiotics and 2 weeks after stopping the acid blocker, so a test while still on dexlansoprazole could give a false negative.</mark></li>
+<li class="new">Some handwritten drug names on the 8 Sep 2025 prescription are hard to read (“Sipam 30 / Filfresh 3”, “Orantil 25”), and the azithromycin dose and duration are written in Bengali.</li>
+<li class="new">No H. pylori test after the Jun–Aug 2026 course other than the 9 Sep endoscopy RUT. The RUT was done about 10 days after stopping vonoprazan, so the positive result is reliable (acid blockers can cause false negatives, not false positives).</li>
+<li>The Nov 2025 blood culture report shows no organism or result line.</li>
+<li>The testosterone value for 8 Feb 2025 differs between the lab report (3.66) and the prescription (3.99).</li>
+<li>Duplicates: "CBC 11 Sept 2026" = "CBC 29 Sept 2026"; the two "COAGULATION PROFILE 9 Sept 2026" files are identical; "Biopsy .pdf" is the 20 Mar 2025 colonoscopy histopathology; "Testosterone and Free Testosterone 16 March 2026" duplicates "Free Testosterone and Total Testosterone 16 March 2026"; "Apollo Imperial Hospital Prescription 8Mar25" is the first two pages of the "Feb-Mar25" file.</li>
+<li>The echo file is named 8 Sept, but the report itself is dated 09 Sep 2026.</li>
+<li>Reference ranges differ between labs (Labaid, IHL, Popular), so compare each value with its own lab's range.</li>
+</ul>
+<p class="note">Summary of the original reports for reading by clinicians and AI assistants. It is not medical advice; verify values against the source documents. L / H flags are relative to each lab’s own reference range.</p></main></div>
